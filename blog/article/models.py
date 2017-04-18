@@ -20,10 +20,10 @@ class Category(models.Model):
     """
 
     name = models.CharField('类目名称', max_length=20)
-    created_time = models.DateTimeField('创建时间', auto_now_add=True)
+    created_time = models.DateField('创建时间', auto_now_add=True)
     last_modified_time = models.DateTimeField('修改时间', auto_now=True)
     owner = models.ForeignKey(
-        'auth.User', verbose_name='作者', related_name='categories', on_delete=models.CASCADE
+        'auth.User', verbose_name='类目作者', related_name='categories', on_delete=models.CASCADE
     )
 
     def __str__(self):
@@ -39,10 +39,10 @@ class Tag(models.Model):
     """
 
     name = models.CharField('标签名称', max_length=20)
-    created_time = models.DateTimeField('创建时间', auto_now_add=True)
+    created_time = models.DateField('创建时间', auto_now_add=True)
     last_modified_time = models.DateTimeField('修改时间', auto_now=True)
     owner = models.ForeignKey(
-        'auth.User', verbose_name='作者', related_name='tags', on_delete=models.CASCADE
+        'auth.User', verbose_name='标签作者', related_name='tags', on_delete=models.CASCADE
     )
 
     def __str__(self):
@@ -68,24 +68,24 @@ class Article(models.Model):
     )
 
     bg_img = models.ImageField('标题背景', upload_to=scramble_upload_img_name, blank=True, null=True)
-    title = models.CharField('标题', max_length=100)
-    body = models.TextField('正文')
+    title = models.CharField('文章标题', max_length=100)
+    body = models.TextField('文章正文')
     abstract = models.CharField(
-        '摘要', max_length=54, blank=True, null=True, help_text="此为可选项，若为空格则摘取正文前50个字符"
+        '文章摘要', max_length=54, blank=True, null=True, help_text="此为可选项，若为空格则摘取正文前50个字符"
     )
-    created_time = models.DateTimeField('创建时间', auto_now_add=True)
-    last_modified_time = models.DateField('修改时间', auto_now=True)
+    created_time = models.DateField('创建时间', auto_now_add=True)
+    last_modified_time = models.DateTimeField('修改时间', auto_now=True)
     status = models.CharField('文章状态', max_length=10, choices=STATUS_CHOICES)
     topped = models.BooleanField('是否置顶', default=False)
     views = models.PositiveIntegerField('点击量', default=0)
     category = models.ForeignKey(
-        Category, verbose_name='分类', related_name='articles', null=True, on_delete=models.SET_NULL
+        Category, verbose_name='文章分类', related_name='articles', null=True, on_delete=models.SET_NULL
     )
     tags = models.ManyToManyField(
         'Tag', verbose_name='标签集合', related_name='articles', blank=True
     )
     owner = models.ForeignKey(
-        'auth.User', verbose_name='作者', related_name='articles', on_delete=models.CASCADE
+        'auth.User', verbose_name='文章作者', related_name='articles', on_delete=models.CASCADE
     )
 
     def __str__(self):
